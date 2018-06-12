@@ -1,4 +1,4 @@
 # Leia-me mucho
 
-Nossos planos são muito bons
+Fork e edite `reports/producao-e-produtividade.Rmd`
 
