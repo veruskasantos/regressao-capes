@@ -106,7 +106,7 @@ Produza aqui a sua versão desse texto, portanto:
 
 -----
 
-*SUBSTITUA ESSE TEXTO*
+Regressão linear foi utilizada para analisar se a **quantidade de docentes permanentes** tem uma associação significativa com a **produção do programa** (quantidade total de artigos publicados em períodos com qualis A1, A2 e B1). Os resultados da regressão indicam que um modelo com os 2 preditores no formato $producao = -41.27 + 4.81 * docentesPermanentes$ explicam 81,46% da variância da variável de resposta (R2 = 0.8146). $docentesPermanentes$, medida como a quantidade total de docentes permanentes no intervalo [8.25, 67.25] tem uma relação significativa com o erro (b = [4,27; 5,36], IC com 95%). O aumento de 1 unidade de $docentesPermanentes$ produz uma mudança de 4.81 na produção do programa.
 
 -----
 
@@ -114,7 +114,8 @@ Dito isso, o que significa a relação que você encontrou na prática para ente
 
 -----
 
-*SUBSTITUA ESSE TEXTO PELA SUA DISCUSSÃO DOS RESULTADOS*
+O modelo encontrado mostra que há uma relação crescente entre a quantidade de docentes permanentes e a produção do programa, ou seja, em geral, quanto mais docentes maior é a produção do programa. Entretanto, segundo o modelo, a partir do aumento de 9 docentes é que a produção do programa vai aumentar. 
+Acredito que a relação é forte porque cada novo docente tende a produzir artigos, logo, quanto mais docentes maior será a produção do programa.
 
 -----
 
@@ -154,11 +155,9 @@ para_plotar_modelo %>%
 
 Considerando agora esses três fatores, o que podemos dizer sobre como cada um deles se relaciona com a produção de um programa de pós em CC? E sobre o modelo? Ele explica mais que o modelo 1? 
 
------
+Regressão múltipla foi utilizada para analisar se a **quantidade de docentes permanentes**, a **quantidade de mestrandos** e a **quantidade de doutorandos** tem uma associação significativa com a **produção do programa** (quantidade total de artigos publicados em períodos com qualis A1, A2 e B1). Os resultados da regressão indicam que um modelo com os 3 preditores no formato $producao = -14.37 + 3.50 * docentesPermanentes - 0.20 * mestrandos + 1 * doutorandos$ explicam 87% da variância da variável de resposta (R2 = 0.8706). $docentesPermanentes$, medida como a quantidade total de docentes permanentes no intervalo [8.25, 67.25] tem uma relação significativa com o erro (b = [2,58; 4,42], IC com 95%), $mestrandos$, medida como a quantidade total de alunos do mestrado no intervalo [0, 433] tem uma relação significativa com o erro (b = [-0,36; -0,03], IC com 95%) e, por fim, $doutorandos$, medida como a quantidade total de alunos do mestrado no intervalo [0, 152] tem uma relação significativa com o erro (b = [0,63; 1,37], IC com 95%). O aumento de 1 unidade de $docentesPermanentes$ produz uma mudança de 3,5 na produção do programa, enquanto que $mestrandos$ diminui 0,2 e $doutorandos$ aumenta 1.
 
-**EXPLICAÇÃO**: *Substitua esse texto por texto feito tal qual o que usamos com uma variável*
-
------
+Sobre o modelo encontrado, ele explica um pouco melhor que o modelo 1, ou seja, o modelo 2 explica 87% da variância da quantidade de docentes permanentes, enquanto que o modelo 1 explica aproximadamente 81%. Isso se deve ao fato de ter acrescentado no modelo variáveis que influenciam na variável dependente.
 
 
 ## Agora produtividade 
@@ -166,3 +165,16 @@ Considerando agora esses três fatores, o que podemos dizer sobre como cada um d
 Diferente de medirmos produção (total produzido), é medirmos produtividade (produzido / utilizado). Abaixo focaremos nessa análise. Para isso crie um modelo que investiga como um conjunto de fatores que você julga que são relevantes se relacionam com a produtividade dos programas. Crie um modelo que avalie como _pelo menos 3 fatores_ se relacionam com a produtividade de um programa. Pode reutilizar fatores que já definimos e analizamos para produção. Mas cuidado para não incluir fatores que sejam função linear de outros já incluídos (ex: incluir A, B e um tercero C=A+B)
 
 Produza abaixo o modelo e um texto que comente (i) o modelo, tal como os que fizemos antes, e (ii) as implicações - o que aprendemos sobre como funcionam programas de pós no brasil?.
+
+#TODO verificar modelo e continuar
+```{r}
+modelo3 = lm(produtividade ~ Nível + mestrados + doutorados, data = cacc)
+
+tidy(modelo3, conf.int = TRUE, conf.level = 0.95)
+glance(modelo2)
+```
+
+
+
+
+
