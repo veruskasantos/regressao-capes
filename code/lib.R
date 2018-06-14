@@ -35,7 +35,7 @@ read_projectdata <- function(){
     readr::read_csv(here::here("data/cacc.csv"), 
                     col_types = cols(
                         .default = col_integer(),
-                        Instituição = col_character(),
+                        Instituicao = col_character(),
                         Programa = col_character(),
                         Sigla = col_character(),
                         `Tem doutorado` = col_character(),

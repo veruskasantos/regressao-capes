@@ -1,6 +1,8 @@
 ---
 title: "Regressão linear na prática"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r warning=FALSE, echo=FALSE}
@@ -27,7 +29,7 @@ A CAPES é um órgão do MEC que tem a atribuição de acompanhar a pós-gradua�
 
 Usaremos dados da penúltima avaliação da CAPES: 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 cacc = read_projectdata()
 
 glimpse(cacc)
@@ -50,7 +52,7 @@ cacc = cacc %>%
 
 ### EDA
 
-```{r}
+```{r warning=FALSE}
 cacc %>% 
   ggplot(aes(x = `Docentes permanentes`)) + 
   geom_histogram(bins = 15, fill = paleta[1])
@@ -68,7 +70,7 @@ Se quisermos modelar o efeito do tamanho do programa em termos de docentes (perm
 
 *Importante*: sempre queremos ver os dados antes de fazermos qualquer modelo ou sumário: 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 cacc %>% 
   ggplot(aes(x = `Docentes permanentes`, y = producao)) + 
   geom_point()
@@ -85,7 +87,7 @@ glance(modelo1)
 
 Para visualizar o modelo:
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 cacc_augmented = cacc %>% 
   add_predictions(modelo1) 
 
@@ -98,15 +100,9 @@ cacc_augmented %>%
 
 Se considerarmos que temos apenas uma amostra de todos os programas de pós em CC no Brasil, o que podemos inferir a partir desse modelo sobre a relação entre número de docentes permanentes e produção de artigos em programas de pós? 
 
-Normalmente reportaríamos o resultado da seguinte maneira, substituindo VarIndepX e todos os x's e y's pelos nomes e valores de fato:
-
-> Regressão múltipla foi utilizada para analisar se VarIndep1 e VarIndep2 tem uma associação significativa com VarDep. Os resultados da regressão indicam que um modelo com os 2 preditores no formato VarDep = XXX.VarIndep1 + YYY.VarIndep2 explicam XX,XX% da variância da variável de resposta (R2 = XX,XX). VarIndep1, medida como/em [unidade ou o que é o 0 e o que é 1] tem uma relação significativa com o erro (b = [yy,yy; zz,zz], IC com 95%), assim como VarIndep2 medida como [unidade ou o que é o 0 e o que é 1] (b = [yy,yy; zz,zz], IC com 95%). O aumento de 1 unidade de VarIndep1 produz uma mudança de xxx em VarDep, enquanto um aumento...
-
-Produza aqui a sua versão desse texto, portanto:
-
 -----
 
-Regressão linear foi utilizada para analisar se a **quantidade de docentes permanentes** tem uma associação significativa com a **produção do programa** (quantidade total de artigos publicados em períodos com qualis A1, A2 e B1). Os resultados da regressão indicam que um modelo com os 2 preditores no formato $producao = -41.27 + 4.81 * docentesPermanentes$ explicam 81,46% da variância da variável de resposta (R2 = 0.8146). $docentesPermanentes$, medida como a quantidade total de docentes permanentes no intervalo [8.25, 67.25] tem uma relação significativa com o erro (b = [4,27; 5,36], IC com 95%). O aumento de 1 unidade de $docentesPermanentes$ produz uma mudança de 4.81 na produção do programa.
+Regressão linear foi utilizada para analisar se a **quantidade de docentes permanentes** tem uma associação significativa com a **produção do programa** (quantidade total de artigos publicados em períodicos com qualis A1, A2 e B1). Os resultados da regressão indicam que um modelo com 1 preditor no formato $producao = -41.27 + 4.81 * docentesPermanentes$ explica 81,46% da variância da variável de resposta (R2 = 0.8146). $docentesPermanentes$, medida como a quantidade total de docentes permanentes, com valores entre [8.25, 67.25], tem uma relação significativa com o erro b = [4,27; 5,36], IC com 95%. O aumento de 1 unidade de $docentesPermanentes$ produz uma mudança de 4.81 na produção do programa.
 
 -----
 
@@ -114,7 +110,7 @@ Dito isso, o que significa a relação que você encontrou na prática para ente
 
 -----
 
-O modelo encontrado mostra que há uma relação crescente entre a quantidade de docentes permanentes e a produção do programa, ou seja, em geral, quanto mais docentes maior é a produção do programa. Entretanto, segundo o modelo, a partir do aumento de 9 docentes é que a produção do programa vai aumentar. 
+O modelo encontrado mostra que há uma relação crescente entre a quantidade de docentes permanentes e a produção do programa, ou seja, em geral, quanto mais docentes maior será a produção do programa. Entretanto, segundo o modelo, a partir do aumento de 9 docentes é que a produção do programa tende a aumentar. 
 Acredito que a relação é forte porque cada novo docente tende a produzir artigos, logo, quanto mais docentes maior será a produção do programa.
 
 -----
@@ -130,7 +126,7 @@ tidy(modelo2, conf.int = TRUE, conf.level = 0.95)
 glance(modelo2)
 ```
 
-Visualizar o modelo com muitas variáveis independentes fica mais difícil
+Visualizar o modelo com muitas variáveis independentes fica mais difícil.
 
 ```{r}
 para_plotar_modelo = cacc %>% 
@@ -145,7 +141,7 @@ glimpse(para_plotar_modelo)
 
 ```
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 para_plotar_modelo %>% 
   ggplot(aes(x = `Docentes permanentes`, y = pred)) + 
   geom_line(aes(group = doutorados, colour = doutorados)) + 
@@ -155,10 +151,13 @@ para_plotar_modelo %>%
 
 Considerando agora esses três fatores, o que podemos dizer sobre como cada um deles se relaciona com a produção de um programa de pós em CC? E sobre o modelo? Ele explica mais que o modelo 1? 
 
-Regressão múltipla foi utilizada para analisar se a **quantidade de docentes permanentes**, a **quantidade de mestrandos** e a **quantidade de doutorandos** tem uma associação significativa com a **produção do programa** (quantidade total de artigos publicados em períodos com qualis A1, A2 e B1). Os resultados da regressão indicam que um modelo com os 3 preditores no formato $producao = -14.37 + 3.50 * docentesPermanentes - 0.20 * mestrandos + 1 * doutorandos$ explicam 87% da variância da variável de resposta (R2 = 0.8706). $docentesPermanentes$, medida como a quantidade total de docentes permanentes no intervalo [8.25, 67.25] tem uma relação significativa com o erro (b = [2,58; 4,42], IC com 95%), $mestrandos$, medida como a quantidade total de alunos do mestrado no intervalo [0, 433] tem uma relação significativa com o erro (b = [-0,36; -0,03], IC com 95%) e, por fim, $doutorandos$, medida como a quantidade total de alunos do mestrado no intervalo [0, 152] tem uma relação significativa com o erro (b = [0,63; 1,37], IC com 95%). O aumento de 1 unidade de $docentesPermanentes$ produz uma mudança de 3,5 na produção do programa, enquanto que $mestrandos$ diminui 0,2 e $doutorandos$ aumenta 1.
+-----
 
-Sobre o modelo encontrado, ele explica um pouco melhor que o modelo 1, ou seja, o modelo 2 explica 87% da variância da quantidade de docentes permanentes, enquanto que o modelo 1 explica aproximadamente 81%. Isso se deve ao fato de ter acrescentado no modelo variáveis que influenciam na variável dependente.
+Regressão múltipla foi utilizada para analisar se a **quantidade de docentes permanentes**, a **quantidade de mestrandos** e a **quantidade de doutorandos** tem uma associação significativa com a **produção do programa** (quantidade total de artigos publicados em períodicos com qualis A1, A2 e B1). Os resultados da regressão indicam que um modelo com os 3 preditores no formato $producao = -14.37 + 3.50 * docentesPermanentes - 0.20 * mestrandos + 1.001 * doutorandos$ explicam 87,07% da variância da variável de resposta (R2 = 0.8707). $docentesPermanentes$, medida como a quantidade total de docentes permanentes, com valores entre [8.25, 67.25], tem uma relação significativa com o erro b = [2,58; 4,42], IC com 95%; $mestrandos$, medida como a quantidade total de alunos do mestrado, com valores entre [0, 433], tem uma relação significativa com o erro b = [-0,36; -0,03], IC com 95% e, por fim, $doutorandos$, medida como a quantidade total de alunos do doutorado, com valores entre [0, 152], tem uma relação significativa com o erro b = [0,63; 1,37], IC com 95%. O aumento de 1 unidade de $docentesPermanentes$ produz uma mudança de 3,5 na produção do programa, enquanto que $mestrandos$ diminui 0,2 e $doutorandos$ aumenta 1.001.
 
+Sobre o modelo encontrado, ele explica um pouco melhor que o modelo 1, ou seja, o modelo 2 explica aproximadamente 87% da variância da quantidade de docentes permanentes, enquanto que o modelo 1 explica aproximadamente 81%. Isso se deve ao fato de ter acrescentado no modelo 2 variáveis que influenciam na variável dependente.
+
+-----
 
 ## Agora produtividade 
 
@@ -166,15 +165,38 @@ Diferente de medirmos produção (total produzido), é medirmos produtividade (p
 
 Produza abaixo o modelo e um texto que comente (i) o modelo, tal como os que fizemos antes, e (ii) as implicações - o que aprendemos sobre como funcionam programas de pós no brasil?.
 
-#TODO verificar modelo e continuar
 ```{r}
-modelo3 = lm(produtividade ~ Nível + mestrados + doutorados, data = cacc)
+colnames(cacc)[which(names(cacc) == "Nível")] <- "Nivel"  #alterando o nome da coluna, porque deu erro ao usá-la
+
+modelo3 = lm(produtividade ~ Nivel + mestrados + doutorados, data = cacc)
 
 tidy(modelo3, conf.int = TRUE, conf.level = 0.95)
-glance(modelo2)
+glance(modelo3)
 ```
 
+```{r warning=FALSE, message=FALSE}
+para_plotar_modelo = cacc %>% 
+  data_grid(produtividade = seq_range(produtividade, 6),
+            Nivel = seq_range(Nivel, 5),  
+            # mestrados = seq_range(mestrados, 3),
+            mestrados = median(mestrados),
+            doutorados = seq_range(doutorados, 3)) %>% 
+  add_predictions(modelo3)
 
+glimpse(para_plotar_modelo)
 
+para_plotar_modelo %>% 
+  ggplot(aes(x = Nivel, y = pred)) + 
+  geom_line(aes(group = doutorados, colour = doutorados)) + 
+  # facet_grid(. ~ as.factor(mestrados)) + 
+  geom_point(data = cacc, aes(y = produtividade, colour = doutorados))
 
+```
 
+-----
+
+Regressão múltipla foi utilizada para analisar se o **nível das instituições**, a **quantidade de mestrandos** e a **quantidade de doutorandos** tem uma associação significativa com a **produtividade do programa** (quantidade total de artigos publicados em períodicos com qualis A1, A2 e B1 dividido pelo total de docentes permanentes). Os resultados da regressão indicam que um modelo com os 3 preditores no formato $produtividade = -0.60 + 0.82 * nivel - 0.004 * mestrandos + 0.008 * doutorandos$ explica 52,59% da variância da variável de resposta (R2 = 0.5259). $nivel$, medida como a qualidade do programa de pós-graduação da instituição, com valores entre [3, 7], tem uma relação significativa com o erro b = [0,49; 1,15], IC com 95%; $mestrandos$, medida como a quantidade total de alunos do mestrado, com valores entre [0, 433], tem uma relação significativa com o erro b = [-0,01; 0,002], IC com 95% e, por fim, $doutorandos$, medida como a quantidade total de alunos do doutorado, com valores entre [0, 152], tem uma relação significativa com o erro b = [-0,007; 0,02], IC com 95%. O aumento de 1 unidade de $nivel$ produz uma mudança de 0,82 na produtividade do programa, enquanto que $mestrandos$ diminui 0,004 e $doutorandos$ aumenta 0,008.
+
+Sobre os modelos aqui encontrados, com os dados da CAPES, percebemos que a quantidade de docentes e discentes na pós-graduação explicam significativamente a variância da produção de artigos bem avaliados, como vistos com os modelos 1 e 2. Entretanto, a quantidade de discentes e o nível da instituição explicam razoavelmente a variação da produtividade em uma instituição, apresentado pelo modelo 3. 
+
+-----
