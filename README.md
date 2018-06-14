@@ -1,4 +1,4 @@
 # Leia-me mucho
 
-Fork e edite `reports/producao-e-produtividade.Rmd`
+Modelos de predição para encontrar relações entre variáveis coletadas pela CAPES, que definem características da pós-graduação em Computação.
 
